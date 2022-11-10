@@ -63,7 +63,7 @@ open class CDMarkdownParser {
     // Enables or disables detection of URLs even without Markdown format
     open var automaticLinkDetectionEnabled: Bool = true
     open var squashNewlines: Bool = true
-    open var imagesEnabled: Bool = true
+    open var imageDetectionEnabled: Bool = true
     public let font: CDFont
     public let fontColor: CDColor
     public let backgroundColor: CDColor
@@ -77,7 +77,7 @@ open class CDMarkdownParser {
                 backgroundColor: CDColor = CDColor.clear,
                 paragraphStyle: NSParagraphStyle? = nil,
                 imageSize: CGSize? = nil,
-                imagesEnabled: Bool = true,
+                imageDetectionEnabled: Bool = true,
                 automaticLinkDetectionEnabled: Bool = true,
                 squashNewlines: Bool = true,
                 customElements: [CDMarkdownElement] = []) {
@@ -140,7 +140,7 @@ open class CDMarkdownParser {
                                 size: imageSize)
 #endif
 
-        self.imagesEnabled = imagesEnabled
+        self.imageDetectionEnabled = imageDetectionEnabled
         self.automaticLinkDetectionEnabled = automaticLinkDetectionEnabled
         self.squashNewlines = squashNewlines
         self.escapingElements = [codeEscaping, escaping]
@@ -217,7 +217,7 @@ open class CDMarkdownParser {
                     element.parse(attributedString)
                 }
             } else if type(of: element) == CDMarkdownImage.self {
-                if imagesEnabled {
+                if imageDetectionEnabled {
                     element.parse(attributedString)
                 }
             } else {
