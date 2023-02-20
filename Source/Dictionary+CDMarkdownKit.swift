@@ -26,9 +26,9 @@
 //
 
 #if os(iOS) || os(tvOS) || os(watchOS)
-import UIKit
+    import UIKit
 #elseif os(macOS)
-import Cocoa
+    import Cocoa
 #endif
 
 internal extension Dictionary where Key == CDAttributedStringKey {
@@ -47,5 +47,21 @@ internal extension Dictionary where Key == CDAttributedStringKey {
 
     mutating func addParagraphStyle(_ paragraphStyle: Value) {
         self[NSAttributedString.Key.paragraphStyle] = paragraphStyle
+    }
+
+    mutating func addStrikethroughColor(_ strikethroughColor: Value) {
+        self[NSAttributedString.Key.strikethroughColor] = strikethroughColor
+    }
+
+    mutating func addStrikethroughStyle(_ strikethroughStyle: NSUnderlineStyle) {
+        self[NSAttributedString.Key.strikethroughStyle] = strikethroughStyle.rawValue as? Value
+    }
+
+    mutating func addUnderlineColor(_ underlineColor: Value) {
+        self[NSAttributedString.Key.underlineColor] = underlineColor
+    }
+
+    mutating func addUnderlineStyle(_ underlineStyle: NSUnderlineStyle) {
+      self[NSAttributedString.Key.underlineStyle] = underlineStyle.rawValue as? Value
     }
 }

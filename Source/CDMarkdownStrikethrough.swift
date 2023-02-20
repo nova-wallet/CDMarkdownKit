@@ -1,9 +1,9 @@
 //
-//  CDMarkdownCode.swift
+//  CDMarkdownStrikethrough.swift
 //  CDMarkdownKit
 //
-//  Created by Christopher de Haan on 11/7/16.
-//
+//  Created by Christopher de Haan on 10/16/22.
+
 //  Copyright © 2016-2022 Christopher de Haan <contact@christopherdehaan.me>
 //
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -31,51 +31,52 @@
     import Cocoa
 #endif
 
-open class CDMarkdownCode: CDMarkdownCommonElement {
+open class CDMarkdownStrikethrough: CDMarkdownCommonElement {
 
-    fileprivate static let regex = "(\\s+|^|\\()(`{1})(\\s*[^`]*?\\s*)(\\2)(?!`)(\\)?)"
+    fileprivate static let regex = "()(~~)(.*?)(\\2)"
 
     open var font: CDFont?
     open var color: CDColor?
     open var backgroundColor: CDColor?
     open var paragraphStyle: NSParagraphStyle?
+    open var strikethroughColor: CDColor?
+    open var strikethroughStyle: NSUnderlineStyle?
     open var underlineColor: CDColor?
     open var underlineStyle: NSUnderlineStyle?
 
     open var regex: String {
-        return CDMarkdownCode.regex
+        return CDMarkdownStrikethrough.regex
     }
 
-    public init(font: CDFont? = CDFont(name: "Menlo-Regular", size: 12),
-                color: CDColor? = CDColor.codeTextRed(),
-                backgroundColor: CDColor? = CDColor.codeBackgroundRed(),
+    public init(font: CDFont? = nil,
+                color: CDColor? = nil,
+                backgroundColor: CDColor? = nil,
                 paragraphStyle: NSParagraphStyle? = nil,
+                strikethroughColor: CDColor? = nil,
+                strikethroughStyle: NSUnderlineStyle? = .single,
                 underlineColor: CDColor? = nil,
                 underlineStyle: NSUnderlineStyle? = nil) {
         self.font = font
         self.color = color
         self.backgroundColor = backgroundColor
         self.paragraphStyle = paragraphStyle
+        self.strikethroughColor = strikethroughColor
+        self.strikethroughStyle = strikethroughStyle
         self.underlineColor = underlineColor
         self.underlineStyle = underlineStyle
     }
 
-    open func addAttributes(_ attributedString: NSMutableAttributedString,
-                            range: NSRange) {
-        let matchString: String = attributedString.attributedSubstring(from: range).string
-        guard let unescapedString = matchString.unescapeUTF16() else { return }
-        attributedString.replaceCharacters(in: range,
-                                           with: unescapedString)
-        let range = NSRange(location: range.location,
-                            length: unescapedString.characterCount())
-        attributedString.addAttributes(attributes,
-                                       range: range)
-        let mutableString = attributedString.mutableString
-        // Remove \n if in string, not valid in Code element
-        // Use Syntax element for \n to parse in string
-        mutableString.replaceOccurrences(of: "\n",
-                                         with: "",
-                                         options: [],
-                                         range: range)
+    public func addAttributes(_ attributedString: NSMutableAttributedString, range: NSRange) {
+        var adjustedAttributes = attributes
+
+        if let strikethroughColor = strikethroughColor {
+            adjustedAttributes.addStrikethroughColor(strikethroughColor)
+        }
+        if let strikethroughStyle = strikethroughStyle {
+            adjustedAttributes.addStrikethroughStyle(strikethroughStyle)
+        }
+
+        attributedString.addAttributes(adjustedAttributes, range: range)
     }
+
 }

@@ -62,6 +62,8 @@ class BaseViewController: UIViewController {
         // Example of a markdown parser with custom properties
         self.customMarkdownParser.bold.color = UIColor.cyan
         self.customMarkdownParser.bold.backgroundColor = UIColor.purple
+        self.customMarkdownParser.bold.underlineColor = UIColor.red
+        self.customMarkdownParser.bold.underlineStyle = .double
         let boldParagraphStyle = NSMutableParagraphStyle()
         boldParagraphStyle.paragraphSpacing = 10
         boldParagraphStyle.paragraphSpacingBefore = 0
@@ -97,6 +99,10 @@ class BaseViewController: UIViewController {
         self.customMarkdownParser.syntax.backgroundColor = UIColor.black
         self.customMarkdownParser.image.size = CGSize(width: 100,
                                                       height: 50)
+        self.customMarkdownParser.strikethrough.font = UIFont.systemFont(ofSize: 20)
+        self.customMarkdownParser.strikethrough.color = UIColor.magenta
+        self.customMarkdownParser.strikethrough.strikethroughColor = UIColor.darkGray
+        self.customMarkdownParser.strikethrough.strikethroughStyle = .double
     }
 
     override func didReceiveMemoryWarning() {
