@@ -36,6 +36,7 @@
 open class CDMarkdownImage: CDMarkdownLinkElement {
 
     fileprivate static let regex = "[!{1}]\\[([^\\[]*?)\\]\\(([^\\)]*)\\)"
+    fileprivate static let urlTitleSeparator = " \""
 
     open var font: CDFont?
     open var color: CDColor?
@@ -91,7 +92,7 @@ open class CDMarkdownImage: CDMarkdownLinkElement {
                                                range: match.range).location
         let linkRange = NSRange(location: linkStartInResult,
                                 length: match.range.length + match.range.location - linkStartInResult - 1)
-        let linkURLString = nsString.substring(with: NSRange(location: linkRange.location + 1,
+        let contentString = nsString.substring(with: NSRange(location: linkRange.location + 1,
                                                              length: linkRange.length - 1))
 
         // deleting trailing markdown
@@ -99,9 +100,12 @@ open class CDMarkdownImage: CDMarkdownLinkElement {
         attributedString.deleteCharacters(in: NSRange(location: match.range.location,
                                                       length: linkRange.length + 2))
 
+        // besides url it might be title in the content separated by space
+        let linkUrlString = contentString.components(separatedBy: Self.urlTitleSeparator).first ?? contentString
+
         // load image
         let textAttachment = NSTextAttachment()
-        if let url = URL(string: linkURLString) {
+        if let url = URL(string: linkUrlString) {
             let data = try? Data(contentsOf: url)
             // Try to load image from url
             if let data = data,
@@ -128,10 +132,10 @@ open class CDMarkdownImage: CDMarkdownLinkElement {
 
         formatText(attributedString,
                    range: formatRange,
-                   link: linkURLString)
+                   link: contentString)
         addAttributes(attributedString,
                       range: formatRange,
-                      link: linkURLString)
+                      link: contentString)
     }
 
     open func addAttributes(_ attributedString: NSMutableAttributedString,
